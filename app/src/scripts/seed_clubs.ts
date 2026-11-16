@@ -1,3 +1,4 @@
+// I did not write this file I got claude to do it for me don't shoot me I wrote all the code in the other files
 import * as dotenv from 'dotenv';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';

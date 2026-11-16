@@ -1,7 +1,9 @@
 import { getGuesses } from "@/server/lib/actions"
+import { gameState } from "@/server/lib/actions";
 
-export default async function Guesses() {
-    const guesses = await getGuesses();
+export default async function Guesses({ gameState } : { gameState : gameState}) {
+
+    const guesses = await getGuesses(gameState);
     return (
         <div className="flex flex-col items-center justify-center gap-4">
             <h1 className="text-xl font-bold">PAST GUESSES</h1>

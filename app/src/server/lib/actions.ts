@@ -5,27 +5,34 @@ import { sql, eq, or, desc, and } from "drizzle-orm";
 import { cookies } from 'next/headers'
 import { getDistance } from "geolib";
 import { revalidatePath } from "next/cache";
+import { validate } from "uuid";
 
-export async function getGuesses() {
+export type gameState = "active" | "gameOver" | "noActiveGame";
+
+export type guessType = {
+  distance : number,
+  name : string | null,
+  league : string | null,
+  country : string | null
+}
+
+export async function getGuesses(gameState : gameState) : Promise<Array<guessType | []>> {
+
+  if (gameState === "noActiveGame") {
+    return [];
+  }
 
   const cookieStore = await cookies();
   const checkid : string = cookieStore.get("game_id")?.value ?? "";
-  if (checkid === "") {
+  if (!validate(checkid)) {
     return [];
   }
 
-  const active = await db
-        .select({ game_over: gamesTable.gameOver })
-        .from(gamesTable)
-        .where(eq(gamesTable.id, checkid));
-
-  if (active[0].game_over) {
-    return [];
-  }
-
-  
   const guesses = await db
-    .select({ distance: guessesTable.distance, name: clubsTable.name, league: clubsTable.league, country: clubsTable.country})
+    .select({ 
+      distance: guessesTable.distance, name: clubsTable.name, league: clubsTable.league, country: clubsTable.country,
+      latitude: clubsTable.latitude, longitude: clubsTable.longitude
+    })
     .from(guessesTable)
     .leftJoin(clubsTable, eq(clubsTable.id, guessesTable.guess))
     .where(eq(guessesTable.gameId, checkid))
@@ -37,22 +44,19 @@ export async function getGuesses() {
 
 export async function actionHandler(input : string, _: unknown, formData: FormData) : Promise<{
   error : string | null;
-  gameOver : boolean;
 }> 
 {
     if (input === "guess") return await submitGuess(_, formData);
-    else if (input == "start-game") {
-      revalidatePath("/");
+    else if (input === "start-game") {
+      await startGame();
     }
     return {
       error : null,
-      gameOver : false
     }
 }
 
 export async function submitGuess(_: unknown, formData: FormData) : Promise<{
   error : string | null;
-  gameOver : boolean;
 }> 
 {
   try {
@@ -61,13 +65,12 @@ export async function submitGuess(_: unknown, formData: FormData) : Promise<{
     const result = await db
       .select({id: clubsTable.id})
       .from(clubsTable)
-      .where(or(eq(clubsTable.name, guess), eq(clubsTable.name, guessButton)))
+      .where(or(eq(clubsTable.name, guessButton), eq(clubsTable.name, guess)))
       .limit(1);
     
     if (result.length === 0) {
       return {
         error : "That's not a club!",
-        gameOver : false
       }
     }
 
@@ -75,67 +78,73 @@ export async function submitGuess(_: unknown, formData: FormData) : Promise<{
     
     const cookieStore = await cookies();
     let gameId : string = cookieStore.get("game_id")?.value ?? "";
-    if (gameId === "") {
+    if (!validate(gameId)) {
       await startGame();
       gameId = cookieStore.get("game_id")?.value ?? "";
     }
 
-    const duplicate = await db
-      .select({id: guessesTable.id})
-      .from(guessesTable)
-      .where(and(eq(guessesTable.gameId, gameId), eq(guessesTable.guess, id)))
+    await db.transaction(async (db) => {
+      const duplicate = await db
+        .select({id: guessesTable.id})
+        .from(guessesTable)
+        .where(and(eq(guessesTable.gameId, gameId), eq(guessesTable.guess, id)))
 
-    if (duplicate.length > 0){
-      return {
-        error : "Already Guessed!",
-        gameOver : false
+      if (duplicate.length > 0){
+        return {
+          error : "Already Guessed!",
+        }
       }
-    }
 
-    const check = await db
-      .update(gamesTable)
-      .set({guesses : sql`${gamesTable.guesses}+1`})
-      .where(eq(gamesTable.id, gameId))
-      .returning({answer: gamesTable.answer, guesses: gamesTable.guesses});
 
-    const { answer, guesses } = check[0];
-    let correct = id == answer;
+      const check = await db
+        .select({answer: gamesTable.answer, guesses: gamesTable.guesses})
+        .from(gamesTable)
+        .where(eq(gamesTable.id, gameId));
+      
 
-    if (correct) {
-      await db
-      .update(gamesTable)
-      .set({gameOver: correct})
-      .where(eq(gamesTable.id, gameId));
-    }
+      const { answer, guesses } = check[0];
+      const correct = id == answer;
 
-    let distance : number = 0
-    if (correct) {
-      distance = 0;
-    } else {
-      const cooridates = await db
-      .select({latitude: clubsTable.latitude, longitude: clubsTable.longitude})
-      .from(clubsTable)
-      .where(or(eq(clubsTable.id, id), eq(clubsTable.id, answer)));
-      const cooridnates1 = cooridates[0];
-      const cooridates2 = cooridates[1];
-      distance = Math.round(getDistance(cooridnates1, cooridates2)/1000);
-    }
+      try {
+        await db
+          .update(gamesTable)
+          .set({gameOver: correct, guesses : sql`${gamesTable.guesses}+1`})
+          .where(eq(gamesTable.id, gameId));
+        
 
-    await db
-      .insert(guessesTable)
-      .values({ guess: id, gameId: gameId, distance: distance, answer: correct, guessNumber: (guesses+1) });
+        let distance : number;
+        if (correct) {
+          distance = 0;
+        } else {
+          const cooridates = await db
+          .select({latitude: clubsTable.latitude, longitude: clubsTable.longitude})
+          .from(clubsTable)
+          .where(or(eq(clubsTable.id, id), eq(clubsTable.id, answer)));
+          const cooridnates1 = cooridates[0];
+          const cooridates2 = cooridates[1];
+          distance = Math.round(getDistance(cooridnates1, cooridates2)/1000);
+        }
+
+        await db
+          .insert(guessesTable)
+          .values({ guess: id, gameId: gameId, distance: distance, answer: correct, guessNumber: (guesses+1) });
+      } catch (e) {
+        db.rollback();
+        return {
+          error : "database error"
+        }
+      }
+    });
     
-    
-    revalidatePath("/")
+    revalidatePath("/");
 
     return {
-      error : null,
-      gameOver : correct
+      error : null
     }
+
   } catch (e) {
     return {
       error : "database error, please email this guy to fix it: jaydenidsp@gmail.com",
-      gameOver : false
     }
   }
 
@@ -143,22 +152,23 @@ export async function submitGuess(_: unknown, formData: FormData) : Promise<{
 
 export async function startGame() : Promise<{
   error : string | null;
-  gameOver : boolean;
 }> 
 {
   try {
     const cookieStore = await cookies();
     const checkid : string = cookieStore.get("game_id")?.value ?? "";
-    if (checkid !== "") {
+    if (validate(checkid)) {
       const active = await db
       .select({ game_over: gamesTable.gameOver })
       .from(gamesTable)
       .where(eq(gamesTable.id, checkid));
+      
       if (!active[0].game_over) {
         return {
           error : "game active",
-          gameOver : false
         }
+      } else {
+        cookieStore.delete("game_id");
       }
     }
 
@@ -178,14 +188,38 @@ export async function startGame() : Promise<{
     const gameId = insert[0].id;
 
     cookieStore.set("game_id", String(gameId));
+    revalidatePath("/");
+    
     return {
       error : null,
-      gameOver : false
     };
+
   } catch (e) {
     return {
       error : "database error, please email this guy to fix it: jaydenidsp@gmail.com",
-      gameOver : false
     }
   }
+}
+
+export async function active() : Promise<gameState> {
+  const cookieStore = await cookies();
+  const gameId : string = cookieStore.get("game_id")?.value ?? "";
+  if (validate(gameId)) {
+      const active = await db
+      .select({ game_over: gamesTable.gameOver })
+      .from(gamesTable)
+      .where(eq(gamesTable.id, gameId));
+      if (active[0].game_over !== null) {
+        if (!active[0].game_over) {
+          return "active";
+        } else {
+          return "gameOver";
+        }
+      } else {
+        return "noActiveGame";
+      }
+  } else {
+    return "noActiveGame";
+  }
+
 }
