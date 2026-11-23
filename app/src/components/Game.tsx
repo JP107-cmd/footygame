@@ -8,8 +8,7 @@ export default async function Game() {
     const gameState : gameState = await active();
 
     return (
-        <section className="flex flex-col items-center justify-center gap-4">
-            <h1 className="text-xl font-bold">GUESS HERE</h1>
+        <section className="flex flex-col gap-10">
             <InputGuess gameState={gameState}/>
             <Suspense fallback={<p>Loading...</p>}>
                 <Guesses gameState={gameState}/>

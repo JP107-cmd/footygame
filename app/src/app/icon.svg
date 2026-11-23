@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <mask id="soccer-pin-mask">
+      <rect width="64" height="64" fill="white" />
+      <circle cx="32" cy="24" r="14" fill="black" />
+    </mask>
+  </defs>
+
+  <path d="M32 4C20.95 4 12 12.95 12 24c0 14 20 36 20 36s20-22 20-36C52 12.95 43.05 4 32 4z" fill="#0E7A26" mask="url(#soccer-pin-mask)" />
+
+  <g fill="#0E7A26">
+    <polygon points="31.2,17.2 26.2,20.8 22.2,18.2 24.4,13.4 29.8,13.4" />
+    <polygon points="32.8,17.2 37.8,20.8 41.8,18.2 39.6,13.4 34.2,13.4" />
+    <polygon points="25.6,22.2 27.5,28.0 23.4,31.2 19.6,26.8 21.4,19.8" />
+    <polygon points="38.4,22.2 36.5,28.0 40.6,31.2 44.4,26.8 42.6,19.8" />
+    <polygon points="28.8,29.0 35.2,29.0 38.8,32.2 35.2,35.6 28.8,35.6 25.2,32.2" />
+  </g>
+</svg>

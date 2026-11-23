@@ -28,17 +28,21 @@ export async function getGuesses(gameState : gameState) : Promise<Array<guessTyp
     return [];
   }
 
-  const guesses = await db
-    .select({ 
-      distance: guessesTable.distance, name: clubsTable.name, league: clubsTable.league, country: clubsTable.country,
-      latitude: clubsTable.latitude, longitude: clubsTable.longitude
-    })
-    .from(guessesTable)
-    .leftJoin(clubsTable, eq(clubsTable.id, guessesTable.guess))
-    .where(eq(guessesTable.gameId, checkid))
-    .orderBy(desc(guessesTable.guessNumber));
-  
-  return guesses;
+  try {
+    const guesses = await db
+      .select({ 
+        distance: guessesTable.distance, name: clubsTable.name, league: clubsTable.league, country: clubsTable.country,
+        latitude: clubsTable.latitude, longitude: clubsTable.longitude
+      })
+      .from(guessesTable)
+      .leftJoin(clubsTable, eq(clubsTable.id, guessesTable.guess))
+      .where(eq(guessesTable.gameId, checkid))
+      .orderBy(desc(guessesTable.guessNumber));
+    
+    return guesses;
+  } catch (e) {
+    return [];
+  }
 
 }
 
