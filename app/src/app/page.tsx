@@ -1,4 +1,5 @@
 import Game from "@/components/Game";
+import Map from "@/components/Map";
 import { Suspense } from "react";
 
 export default async function Home() {
@@ -9,11 +10,10 @@ export default async function Home() {
         <h1 className="text-4xl font-bold">Footy Finder</h1>
         <p className="text-lg">Find Mystery Club From Europe&apos;s Top 5 Leagues</p>
       </div>
-      <section className="grid grid-cols-1 lg:grid-cols-2">
+      <section className="h-full">
         <Suspense fallback={<p>Loading Game</p>}>
           <Game/>
         </Suspense>
-        <div className="bg-black"/>
       </section>
     </main>
   );

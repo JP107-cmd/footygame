@@ -14,6 +14,10 @@ export type guessType = {
   name : string | null,
   league : string | null,
   country : string | null
+  latitude : number | null,
+  longitude : number | null,
+  stadium : string | null,
+  answer : boolean | null
 }
 
 export async function getGuesses(gameState : gameState) : Promise<Array<guessType | []>> {
@@ -32,7 +36,7 @@ export async function getGuesses(gameState : gameState) : Promise<Array<guessTyp
     const guesses = await db
       .select({ 
         distance: guessesTable.distance, name: clubsTable.name, league: clubsTable.league, country: clubsTable.country,
-        latitude: clubsTable.latitude, longitude: clubsTable.longitude
+        latitude: clubsTable.latitude, longitude: clubsTable.longitude, stadium : clubsTable.stadiumName, answer : guessesTable.answer
       })
       .from(guessesTable)
       .leftJoin(clubsTable, eq(clubsTable.id, guessesTable.guess))

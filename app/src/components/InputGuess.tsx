@@ -28,20 +28,20 @@ export default function InputGuess({ gameState } : { gameState : gameState }) {
     }
 
     return (
-         <div className="flex flex-col gap-4 ">
-            <div>
+         <div className="">
+            <div className="grid grid-cols-1 gap-4 w-7/12">
                 <form 
                     onSubmit={() => intentRef.current = 'guess'} action={formAction} 
-                    className="flex flex-col gap-4 w-7/12"
+                    className="flex flex-col gap-4"
                 >
-                    <div className={`border-green-800 border-2 rounded-md flex flex-row gap-12 p-1 w-fit ${focused == true ? "ring-emerald-700/20 ring-4" : ""}`}>
+                    <div className={`border-2 rounded-md flex flex-row gap-12 p-1 w-fit ${gameState !== "gameOver" ? "border-green-800" : "border-green-800/20"}`}>
                         <input 
                             name="guess" type="text" className="focus:outline-none" onChange={(e) => setInput(e.target.value)} autoComplete="off"
                             disabled={gameState === "gameOver" ? true : false} placeholder="Enter your guess here" onFocus={() => setFocus(true)}
                             onBlur={() => setFocus(false)}
                         />
                         <input 
-                            className="bg-emerald-800 text-white font-bold px-1 py-1 rounded-md"
+                            className={`${gameState !== "gameOver" ? "bg-emerald-800" : "bg-emerald-400"} text-white font-bold px-1 py-1 rounded-md`}
                             type="submit"
                             disabled={gameState === "gameOver" ? true : false}
                         />
@@ -57,7 +57,7 @@ export default function InputGuess({ gameState } : { gameState : gameState }) {
                     </div>
                 </form>
                 { gameState === "gameOver" &&
-                    <div className="flex gap-4 bg-green-400 p-4 rounded-md">
+                    <div className="flex gap-4 bg-green-400 p-4 rounded-md w-full">
                         <p className="text-white font-bold">You Won!</p>
                         <form 
                         onSubmit={() => intentRef.current = 'start-game'} action={formAction} 
