@@ -31,8 +31,8 @@ export default function ClientMap({ guesses } : { guesses : Array<guessType | []
     };
 
     return (
-        <div className="h-full">
-            <MapContainer center={defaultPosition} zoom={5} className="h-full">
+        <div className="h-full min-h-80 overflow-hidden rounded-md border border-emerald-800">
+            <MapContainer center={defaultPosition} zoom={4} className="h-full">
                 <TileLayer
                 attribution='&copy; OpenStreetMap contributors &copy; CARTO'
                 url='https://basemaps.cartocdn.com/rastertiles/light_nolabels/{z}/{x}/{y}.png?key=cb1_5fd8_1_08377ff2c882362f6d884456'

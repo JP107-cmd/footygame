@@ -86,23 +86,33 @@ export async function submitGuess(_: unknown, formData: FormData) : Promise<{
     
     const cookieStore = await cookies();
     let gameId : string = cookieStore.get("game_id")?.value ?? "";
-    if (!validate(gameId)) {
+    if (validate(gameId)) {
+      const active = await db
+      .select({ game_over: gamesTable.gameOver })
+      .from(gamesTable)
+      .where(eq(gamesTable.id, gameId));
+      
+      if (active[0].game_over) {
+        await startGame();
+        gameId = cookieStore.get("game_id")?.value ?? "";
+      }
+    } else {
       await startGame();
       gameId = cookieStore.get("game_id")?.value ?? "";
     }
 
-    await db.transaction(async (db) => {
-      const duplicate = await db
-        .select({id: guessesTable.id})
-        .from(guessesTable)
-        .where(and(eq(guessesTable.gameId, gameId), eq(guessesTable.guess, id)))
+    const duplicate = await db
+      .select({id: guessesTable.id})
+      .from(guessesTable)
+      .where(and(eq(guessesTable.gameId, gameId), eq(guessesTable.guess, id)))
 
-      if (duplicate.length > 0){
-        return {
-          error : "Already Guessed!",
-        }
+    if (duplicate.length > 0) {
+      return {
+        error : "Already Guessed!",
       }
+    }
 
+    await db.transaction(async (db) => {
 
       const check = await db
         .select({answer: gamesTable.answer, guesses: gamesTable.guesses})
@@ -171,7 +181,7 @@ export async function startGame() : Promise<{
       .from(gamesTable)
       .where(eq(gamesTable.id, checkid));
       
-      if (!active[0].game_over) {
+      if (!active[0]?.game_over) {
         return {
           error : "game active",
         }
@@ -217,7 +227,7 @@ export async function active() : Promise<gameState> {
       .select({ game_over: gamesTable.gameOver })
       .from(gamesTable)
       .where(eq(gamesTable.id, gameId));
-      if (active[0].game_over !== null) {
+      if (active[0]?.game_over !== null || active[0]?.game_over !== undefined) {
         if (!active[0].game_over) {
           return "active";
         } else {
