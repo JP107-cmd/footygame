@@ -23,8 +23,8 @@ export default async function Guesses({ guesses } : { guesses : Array<guessType 
   };
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col gap-4 px-3 pb-4 pt-4 sm:px-5">
-      <header className="flex items-baseline justify-between gap-3 border-t border-black/30 pt-4">
+    <section className="flex min-h-0 flex-1 flex-col gap-3 px-3 pb-4 sm:px-5">
+      <header className="flex items-baseline justify-between gap-3 border-t border-black/30 pt-3">
         <h2 className="font-display text-2xl font-bold text-cream">
           Past Guesses
         </h2>

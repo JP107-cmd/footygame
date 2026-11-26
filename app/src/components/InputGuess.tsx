@@ -57,18 +57,19 @@ export default function InputGuess({ gameState } : { gameState : gameState }) {
                     </div>
                 </form>
                 { gameState === "gameOver" &&
-                    <div className="flex gap-4 bg-bottle p-4 rounded-md w-full">
-                        <p className="font-chalk text-chalk font-bold">You Won!</p>
-                        <form 
-                        onSubmit={() => intentRef.current = 'start-game'} action={formAction} 
-                        className="flex flex-col items-center justify-center gap-4"
-                        >
-                            <input 
-                            type="submit" value="Play Again" className="bg-oxblood hover:bg-oxblood/85
-                            font-display text-cream font-bold py-2 px-4 rounded-sm"
-                            />
-                        </form>
-                    </div>
+                    <section className="rounded-m bg-frame p-2 shadow-[0_6px_12px_rgb(0_0_0/0.3)]">
+                        <div className="flex min-h-24 flex-col items-start justify-center gap-4 bg-slate px-4 py-5 sm:px-6">
+                            <p className="font-chalk text-3xl font-bold leading-none text-chalk sm:text-4xl mx-auto">You found it!</p>
+                            <form
+                              onSubmit={() => intentRef.current = 'start-game'} action={formAction}
+                              className="self-center"
+                            >
+                                <input
+                                  type="submit" value="Play again" className="rounded-sm border-2 border-brass bg-oxblood px-5 py-3 font-display text-xl font-bold text-cream hover:bg-oxblood/85"
+                                />
+                            </form>
+                        </div>
+                    </section>
                 }
             </div>
             { serverState?.error &&
