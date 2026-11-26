@@ -15,8 +15,8 @@ export default function ClientMap({ guesses } : { guesses : Array<guessType | []
         // (Real Betis and Union Berlin)
         const closeness = Math.max(0, 1 - distance / 2264);
         const colour = answer
-            ? "#22c55e"
-            : distance < 25 ? '#ef533c' : distance < 100 ? '#ff8440' : distance < 250 ? '#ffbd3e' : distance < 500 ? '#a8dc4d' : distance < 900 ? '#38b9eb' : '#2459c8';
+            ? "#1F4D36"
+            : distance < 25 ? '#E4572E' : distance < 100 ? '#E4572E' : distance < 250 ? '#F2A541' : distance < 500 ? '#F2A541' : distance < 900 ? '#5DA9E9' : '#1F4E8C';
 
         return L.divIcon({
             className: "custom-pin",
@@ -31,11 +31,11 @@ export default function ClientMap({ guesses } : { guesses : Array<guessType | []
     };
 
     return (
-        <div className="h-full min-h-80 overflow-hidden rounded-md border border-emerald-800">
+        <div className="h-full min-h-80 overflow-hidden rounded-md border-4 border-frame bg-paper p-2 shadow-[0_6px_16px_rgb(0_0_0/0.3)]">
             <MapContainer center={defaultPosition} zoom={4} className="h-full">
                 <TileLayer
-                attribution='&copy; OpenStreetMap contributors &copy; CARTO'
-                url='https://basemaps.cartocdn.com/rastertiles/light_nolabels/{z}/{x}/{y}.png?key=cb1_5fd8_1_08377ff2c882362f6d884456'
+                attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+                url='https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg'
                 minZoom={4}
                 maxZoom={10}
                 />

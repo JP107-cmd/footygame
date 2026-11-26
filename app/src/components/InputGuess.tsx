@@ -28,51 +28,51 @@ export default function InputGuess({ gameState } : { gameState : gameState }) {
     }
 
     return (
-         <div className="">
+         <div className="rounded-md border border-frame bg-wood px-5 py-4 shadow-lg">
             <div className="grid grid-cols-1 gap-4 w-7/12">
                 <form 
                     onSubmit={() => intentRef.current = 'guess'} action={formAction} 
                     className="flex flex-col gap-4"
                 >
-                    <div className={`border-2 rounded-md flex flex-row gap-12 p-1 w-fit ${gameState !== "gameOver" ? "border-green-800" : "border-green-800/20"}`}>
+                    <div className={`border-2 rounded-md flex flex-row gap-12 p-1 w-fit ${gameState !== "gameOver" ? "border-brass" : "border-brass/30"}`}>
                         <input 
-                            name="guess" type="text" className="focus:outline-none" onChange={(e) => setInput(e.target.value)} autoComplete="off"
+                            name="guess" type="text" className="bg-paper px-2 py-1 text-ink placeholder:text-ink-soft/70 focus:outline-none" onChange={(e) => setInput(e.target.value)} autoComplete="off"
                             disabled={gameState === "gameOver" ? true : false} placeholder="Enter your guess here" onFocus={() => setFocus(true)}
                             onBlur={() => setFocus(false)}
                         />
                         <input 
-                            className={`${gameState !== "gameOver" ? "bg-emerald-800" : "bg-emerald-400"} text-white font-bold px-1 py-1 rounded-md`}
+                            className={`${gameState !== "gameOver" ? "bg-oxblood hover:bg-oxblood/85" : "bg-oxblood/50"} font-display text-cream font-bold px-3 py-1 rounded-sm`}
                             type="submit"
                             disabled={gameState === "gameOver" ? true : false}
                         />
                     </div>
-                    <div className="grid grid-cols-1 absolute z-10 mt-12 max-h-64 overflow-y-auto rounded-xl border-gray-500 border">
+                    <div className="grid grid-cols-1 absolute z-10 mt-12 max-h-64 overflow-y-auto rounded-md border border-frame bg-paper shadow-lg">
                         { filteredClubs &&
                             filteredClubs.map((club, key) => (
                                 <button type="submit" name="guess-button" key={key} value={club.name} 
-                                className="bg-white border-gray-500 border" 
+                                className="border-b border-frame/30 bg-paper px-3 py-2 text-left text-ink hover:bg-cream"
                                 onClick={handleClick}>{club.name}</button>
                             ))
                         }
                     </div>
                 </form>
                 { gameState === "gameOver" &&
-                    <div className="flex gap-4 bg-green-400 p-4 rounded-md w-full">
-                        <p className="text-white font-bold">You Won!</p>
+                    <div className="flex gap-4 bg-bottle p-4 rounded-md w-full">
+                        <p className="font-chalk text-chalk font-bold">You Won!</p>
                         <form 
                         onSubmit={() => intentRef.current = 'start-game'} action={formAction} 
                         className="flex flex-col items-center justify-center gap-4"
                         >
                             <input 
-                            type="submit" value="Play Again" className="bg-green-500 hover:bg-green-700 
-                            text-white font-bold py-2 px-4 rounded-md"
+                            type="submit" value="Play Again" className="bg-oxblood hover:bg-oxblood/85
+                            font-display text-cream font-bold py-2 px-4 rounded-sm"
                             />
                         </form>
                     </div>
                 }
             </div>
             { serverState?.error &&
-            <p>{serverState.error}</p>
+            <p className="mt-2 text-sm text-hot">{serverState.error}</p>
             }
         </div>
     )
