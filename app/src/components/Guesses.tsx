@@ -10,22 +10,24 @@ export default async function Guesses({ gameState, guesses } : { gameState : gam
    })
 
     return (
-        <div className="flex min-h-0 flex-col gap-4">
+        <div className="flex min-h-0 flex-1 flex-col gap-4">
             <span className="flex flex-row text-xl font-bold"><p>Past Guesses <i className="font-light">{guesses?.length}</i></p></span>
-            { guesses?.map((guess : any) => (
-              <div className="flex flex-col justify-between gap-3 rounded-md border border-gray-300 px-4 py-3 shadow-md sm:flex-row sm:items-center" key={guess.name}>
-                <div className="">
-                  <p className="text-md">{guess.name}</p>
-                  <p className="text-md">{guess.distance} km away</p>
+            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-2">
+              { guesses?.map((guess : any) => (
+                <div className="flex flex-col justify-between gap-3 rounded-md border border-gray-300 px-4 py-3 shadow-md sm:flex-row sm:items-center" key={guess.name}>
+                  <div className="">
+                    <p className="text-md">{guess.name}</p>
+                    <p className="text-md">{guess.distance} km away</p>
+                  </div>
+                  <div className="flex flex-row flex-wrap gap-x-2 gap-y-1">
+                    <p className="font-sans">{guess.league}</p>
+                    <p>{guess.country}</p>
+                    <div className={`bg-amber-200 bg-[${colour(guess.answer, guess.distance)}] h-10`}/>
+                  </div>
                 </div>
-                <div className="flex flex-row flex-wrap gap-x-2 gap-y-1">
-                  <p className="font-sans">{guess.league}</p>
-                  <p>{guess.country}</p>
-                  <div className={`bg-amber-200 bg-[${colour(guess.answer, guess.distance)}] h-10`}/>
-                </div>
-              </div>
-            ))
-            }
+              ))
+              }
+            </div>
           </div>
     )
 }
