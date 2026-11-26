@@ -9,10 +9,6 @@ export default function ClientMap({ guesses } : { guesses : Array<guessType | []
     // starting position
 
     const icon = (distance: number, answer: boolean | null) => {
-        // I used AI for this don't be mad
-        // The max distance (most blue icon) is set at 2264km as
-        // That is the farthest distance between 2 top 5 league clubs
-        // (Real Betis and Union Berlin)
         const closeness = Math.max(0, 1 - distance / 2264);
         const colour = answer
             ? "#1F4D36"
@@ -31,12 +27,12 @@ export default function ClientMap({ guesses } : { guesses : Array<guessType | []
     };
 
     return (
-        <div className="h-full min-h-80 overflow-hidden rounded-md border-4 border-frame bg-paper p-2 shadow-[0_6px_16px_rgb(0_0_0/0.3)]">
-            <MapContainer center={defaultPosition} zoom={4} className="h-full">
+        <div className="relative h-full min-h-0 rotate-[-0.75deg] overflow-visible rounded-md border-4 bg-paper p shadow-[0_6px_16px_rgb(0_0_0/0.3)]">
+            <MapContainer center={defaultPosition} zoom={4} className="relative z-0 h-full border-2 border-[#B59661]">
                 <TileLayer
                 attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
                 url='https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg'
-                minZoom={4}
+                minZoom={3}
                 maxZoom={10}
                 />
                 { guesses?.map((guess : any) =>
@@ -52,6 +48,10 @@ export default function ClientMap({ guesses } : { guesses : Array<guessType | []
                     </Marker>
                 )}
             </MapContainer>
+            <span aria-hidden="true" className="pointer-events-none absolute -left-2 -top-2 z-10 size-4 rounded-full border border-[#9D7732] bg-brass shadow-[inset_2px_2px_2px_rgb(255_255_255/0.55),1px_2px_3px_rgb(0_0_0/0.35)]" />
+            <span aria-hidden="true" className="pointer-events-none absolute -right-2 -top-2 z-10 size-4 rounded-full border border-[#9D7732] bg-brass shadow-[inset_2px_2px_2px_rgb(255_255_255/0.55),1px_2px_3px_rgb(0_0_0/0.35)]" />
+            <span aria-hidden="true" className="pointer-events-none absolute -bottom-2 -left-2 z-10 size-4 rounded-full border border-[#9D7732] bg-brass shadow-[inset_2px_2px_2px_rgb(255_255_255/0.55),1px_2px_3px_rgb(0_0_0/0.35)]" />
+            <span aria-hidden="true" className="pointer-events-none absolute -bottom-2 -right-2 z-10 size-4 rounded-full border border-[#9D7732] bg-brass shadow-[inset_2px_2px_2px_rgb(255_255_255/0.55),1px_2px_3px_rgb(0_0_0/0.35)]" />
         </div>
     );
 }

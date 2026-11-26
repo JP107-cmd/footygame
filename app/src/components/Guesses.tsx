@@ -2,31 +2,61 @@ import { guessType } from "@/server/lib/actions"
 
 export default async function Guesses({ guesses } : { guesses : Array<guessType | []>}) {
 
-   const colour = ((answer : boolean, distance : number) => {
-    return (answer
+  const colour = (answer: boolean | null, distance: number) => {
+    return answer
       ? "#1F4D36"
-      : distance < 25 ? '#E4572E' : distance < 100 ? '#E4572E' : distance < 250 ? '#F2A541' : distance < 500 ? '#F2A541' : distance < 900 ? '#5DA9E9' : '#1F4E8C');
-   })
+      : distance < 100 ? "#E4572E"
+      : distance < 500 ? "#F2A541"
+      : distance < 900 ? "#5DA9E9"
+      : "#1F4E8C";
+  };
 
-    return (
-        <div className="flex min-h-0 flex-1 flex-col gap-4">
-            <span className="flex flex-row font-display text-xl font-bold text-gilt"><p>Past Guesses <i className="font-sans font-normal text-sm text-cream/75">{guesses?.length}</i></p></span>
-            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-2">
-              { guesses?.map((guess : any) => (
-                <div className="flex flex-col justify-between gap-3 rounded-md border border-brass/70 bg-paper px-4 py-3 text-ink shadow-md sm:flex-row sm:items-center" key={guess.name}>
-                  <div className="">
-                    <p className="font-display text-md font-bold">{guess.name}</p>
-                    <p className="text-sm text-ink-soft">{guess.distance} km away</p>
-                  </div>
-                  <div className="flex flex-row flex-wrap gap-x-2 gap-y-1">
-                    <p className="font-sans text-sm">{guess.league}</p>
-                    <p className="text-sm">{guess.country}</p>
-                    <div className="h-3 w-3 shrink-0 rounded-full ring-1 ring-ink/20" style={{ backgroundColor: colour(guess.answer, guess.distance) }}/>
-                  </div>
+  const rotation = (seed: string) => {
+    const value = [...seed].reduce((total, character) => (
+      (total * 31 + character.charCodeAt(0)) % 1000
+    ), 0);
+
+    if (value > 750) return '6deg';
+    else if (value > 500) return '3deg';
+    else if (value > 250) return '-3deg';
+    else return '-6deg';
+  };
+
+  return (
+    <section className="flex min-h-0 flex-1 flex-col gap-4">
+      <header className="flex items-baseline justify-between gap-3">
+        <h2 className="font-display text-2xl font-bold text-gilt">
+          Past Guesses
+        </h2>
+      </header>
+
+      <div className="guess-scroll grid grid-cols-2 content-start gap-3 pb-2 sm:gap-4 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain lg:pr-2">
+        {guesses?.map((guess: any) => {
+          const distanceColour = colour(guess.answer, guess.distance);
+
+          return (
+            <article
+              className="coaster aspect-square min-w-0 rounded-full bg-cream p-[3%] text-center text-ink shadow-[0_6px_12px_rgb(0_0_0/0.3)]"
+              key={guess.name}
+              style={{ transform: `rotate(${rotation(guess.name ?? "")})` }}
+            >
+              <div className="h-full rounded-full p-[7%]" style={{ backgroundColor: distanceColour }}>
+                <div className="flex h-full flex-col items-center justify-center rounded-full border-2 border-dashed border-[#B59661] bg-paper px-[9%] py-[8%]">
+                  <h3 className="coaster-name font-display font-bold leading-[1.05]">
+                    {guess.name}
+                  </h3>
+                  <p className="coaster-meta mt-[3cqi] leading-tight text-ink-soft">
+                    {guess.league}{guess.country ? ` · ${guess.country}` : ""}
+                  </p>
+                  <p className="coaster-distance mt-[8cqi] font-display font-extrabold leading-none">
+                    {guess.distance}<span className="coaster-unit ml-[1cqi]">km</span>
+                  </p>
                 </div>
-              ))
-              }
-            </div>
-          </div>
-    )
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
 }

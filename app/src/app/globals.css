@@ -41,3 +41,48 @@ body {
     transparent 32px
   );
 }
+
+@media (max-width: 639px) {
+  .leaflet-control-attribution {
+    padding: 1px 3px;
+    font-size: 8px;
+    line-height: 1.2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .guess-scroll {
+    scrollbar-color: var(--color-brass) transparent;
+    scrollbar-width: thin;
+  }
+
+  .guess-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .guess-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--color-brass);
+    border: 2px solid var(--color-wall);
+    border-radius: 9999px;
+  }
+}
+
+.coaster {
+  container-type: inline-size;
+}
+
+.coaster-name {
+  font-size: clamp(0.9rem, 10cqi, 1.55rem);
+}
+
+.coaster-meta {
+  font-size: clamp(0.65rem, 6.5cqi, 1rem);
+}
+
+.coaster-distance {
+  font-size: clamp(1.65rem, 18cqi, 3rem);
+}
+
+.coaster-unit {
+  font-size: clamp(0.8rem, 7cqi, 1.2rem);
+}
