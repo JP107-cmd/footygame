@@ -106,3 +106,74 @@ body {
 .coaster-unit {
   font-size: clamp(0.8rem, 7cqi, 1.2rem);
 }
+
+.custom-dart {
+  background: transparent;
+  border: 0;
+}
+
+.dart-marker {
+  display: block;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+}
+
+.dart-marker svg {
+  display: block;
+  width: 64px;
+  height: 64px;
+}
+
+.leaflet-popup-content-wrapper {
+  border: 2px solid #9D8870;
+  border-radius: 0;
+  background: var(--color-cream);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.28);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+}
+
+.leaflet-popup-tip {
+  background: var(--color-cream);
+}
+
+.leaflet-popup-close-button {
+  display: none;
+}
+
+.dart-popup {
+  padding: 6px 8px 5px;
+  color: var(--color-ink);
+  font-family: var(--font-inter), Arial, sans-serif;
+}
+
+.dart-popup__summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.dart-popup__summary strong {
+  font-size: 16px;
+}
+
+.dart-popup__dot {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border: 2px solid var(--color-ink);
+  border-radius: 9999px;
+}
+
+.dart-popup__stadium {
+  margin: 4px 0 0 18px;
+  color: var(--color-ink-soft);
+  font-size: 11px;
+  line-height: 1.2;
+}
