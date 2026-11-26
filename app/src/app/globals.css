@@ -42,6 +42,26 @@ body {
   );
 }
 
+.table-surface {
+  background-color: var(--color-wood-dark);
+  background-image:
+    linear-gradient(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.08)),
+    repeating-linear-gradient(
+      0deg,
+      rgb(0 0 0 / 0.2) 0,
+      rgb(0 0 0 / 0.2) 1px,
+      transparent 1px,
+      transparent 15px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 6px,
+      rgb(255 255 255 / 0.035) 7px,
+      transparent 8px
+    );
+}
+
 @media (max-width: 639px) {
   .leaflet-control-attribution {
     padding: 1px 3px;

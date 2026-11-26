@@ -28,24 +28,24 @@ export default function InputGuess({ gameState } : { gameState : gameState }) {
     }
 
     return (
-         <div className="rounded-md border border-frame bg-wood px-3 py-4 shadow-lg sm:px-5">
-            <div className="grid w-full grid-cols-1 gap-4">
+         <div className="border-b border-black/30 px-3 py-4 sm:px-5">
+            <div className="grid w-full grid-cols-1 gap-3">
+                <p className="text-sm font-bold text-cream">Your guess</p>
                 <form 
                     onSubmit={() => intentRef.current = 'guess'} action={formAction} 
-                    className="relative flex w-full flex-col gap-4"
+                    className="relative flex w-full min-w-0 items-stretch gap-2"
                 >
-                    <div className={`flex w-full min-w-0 items-center gap-2 rounded-md border-2 p-1 ${gameState !== "gameOver" ? "border-brass" : "border-brass/30"}`}>
-                        <input 
-                            name="guess" type="text" className="min-w-0 flex-1 bg-paper px-2 py-1 text-ink placeholder:text-ink-soft/70 focus:outline-none" onChange={(e) => setInput(e.target.value)} autoComplete="off"
-                            disabled={gameState === "gameOver" ? true : false} placeholder="Enter your guess here" onFocus={() => setFocus(true)}
-                            onBlur={() => setFocus(false)}
-                        />
-                        <input 
-                            className={`${gameState !== "gameOver" ? "bg-oxblood hover:bg-oxblood/85" : "bg-oxblood/50"} shrink-0 rounded-sm px-3 py-1 font-display font-bold text-cream`}
-                            type="submit"
-                            disabled={gameState === "gameOver" ? true : false}
-                        />
-                    </div>
+                    <input
+                        name="guess" type="text" className="min-w-0 flex-1 rounded-sm border-2 border-brass bg-paper px-3 py-2 text-ink placeholder:text-ink-soft/70 focus:outline-none" onChange={(e) => setInput(e.target.value)} autoComplete="off"
+                        disabled={gameState === "gameOver" ? true : false} placeholder="Type a club..." onFocus={() => setFocus(true)}
+                        onBlur={() => setFocus(false)}
+                    />
+                    <input
+                        className={`${gameState !== "gameOver" ? "bg-oxblood hover:bg-oxblood/85" : "bg-oxblood/50"} shrink-0 rounded-sm border-2 border-brass px-3 py-2 font-display font-bold text-cream sm:px-6`}
+                        type="submit"
+                        value="Guess"
+                        disabled={gameState === "gameOver" ? true : false}
+                    />
                     <div className="absolute top-full z-10 mt-1 grid w-full grid-cols-1 max-h-64 overflow-y-auto rounded-md border border-frame bg-paper shadow-lg">
                         { filteredClubs &&
                             filteredClubs.map((club, key) => (

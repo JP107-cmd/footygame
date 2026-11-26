@@ -22,7 +22,7 @@ export default async function Game() {
                     <Map guesses={guesses}/>
                 </Suspense>
             </div>
-            <div className="flex flex-col gap-6 lg:min-h-0 lg:max-h-full lg:overflow-hidden">
+            <div className="table-surface flex flex-col overflow-hidden rounded-md border border-frame shadow-lg lg:min-h-0 lg:max-h-full">
                 <InputGuess gameState={gameState}/>
                 <Suspense fallback={<p>Loading...</p>}>
                     <Guesses guesses={guesses}/>
