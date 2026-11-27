@@ -220,6 +220,7 @@ export async function startGame() : Promise<{
 }
 
 export async function active() : Promise<gameState> {
+
   const cookieStore = await cookies();
   const gameId : string = cookieStore.get("game_id")?.value ?? "";
   if (validate(gameId)) {

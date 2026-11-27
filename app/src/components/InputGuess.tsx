@@ -6,7 +6,6 @@ import { clubs, clubType } from "@/server/lib/clubs";
 export default function InputGuess({ gameState } : { gameState : gameState }) {
     const [input, setInput] = useState("");
     const [filteredClubs, setFilteredClubs] = useState<Array<clubType>>([]);
-    const [focused, setFocus] = useState<boolean>(false);
     const intentRef = useRef<string>("");
     const [serverState, formAction] = useActionState(
         async(_: unknown, formData: FormData) => {
@@ -36,12 +35,11 @@ export default function InputGuess({ gameState } : { gameState : gameState }) {
                     className="relative flex w-full min-w-0 items-stretch gap-2"
                 >
                     <input
-                        name="guess" type="text" className="min-w-0 flex-1 rounded-sm border-2 border-brass bg-paper px-3 py-2 text-ink placeholder:text-ink-soft/70 focus:outline-none" onChange={(e) => setInput(e.target.value)} autoComplete="off"
-                        disabled={gameState === "gameOver" ? true : false} placeholder="Type a club..." onFocus={() => setFocus(true)}
-                        onBlur={() => setFocus(false)}
+                        name="guess" type="text" className={`${gameState !== "gameOver" ? "bg-paper text-ink placeholder:text-ink-soft/70" : "bg-paper/40 placeholder:text-ink-soft/0"} min-w-0 flex-1 rounded-sm border-2 border-brass px-3 py-2 focus:outline-none`} onChange={(e) => setInput(e.target.value)} autoComplete="off"
+                        disabled={gameState === "gameOver" ? true : false} placeholder="Type a club..."
                     />
                     <input
-                        className={`${gameState !== "gameOver" ? "bg-oxblood hover:bg-oxblood/85" : "bg-oxblood/50"} shrink-0 rounded-sm border-2 border-brass px-3 py-2 font-display font-bold text-cream sm:px-6`}
+                        className={`${gameState !== "gameOver" ? "bg-oxblood hover:bg-oxblood/85 text-cream" : "bg-oxblood/20 text-cream/20"} shrink-0 rounded-sm border-2 border-brass px-3 py-2 font-display font-boldsm:px-6`}
                         type="submit"
                         value="Guess"
                         disabled={gameState === "gameOver" ? true : false}
@@ -57,7 +55,7 @@ export default function InputGuess({ gameState } : { gameState : gameState }) {
                     </div>
                 </form>
                 { gameState === "gameOver" &&
-                    <section className="rounded-m bg-frame p-2 shadow-[0_6px_12px_rgb(0_0_0/0.3)]">
+                    <section className="rounded-m bg-frame p-2 shadow-[0_6px_12px_rgb(0_0_0/0.3)] rotate-[-0.75deg]">
                         <div className="flex min-h-24 flex-col items-start justify-center gap-4 bg-slate px-4 py-5 sm:px-6">
                             <p className="font-chalk text-3xl font-bold leading-none text-chalk sm:text-4xl mx-auto">You found it!</p>
                             <form

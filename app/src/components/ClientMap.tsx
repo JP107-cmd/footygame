@@ -25,17 +25,17 @@ export default function ClientMap({ guesses } : { guesses : Array<guessType | []
     const defaultPosition : [number, number] = [46.858806, 3.185694]; // Center of France (Can see most of Western Europe with this)
     // starting position
 
-    const dartColour = (distance: number, answer: boolean | null) => {
-        return answer
-            ? "#1F4D36"
-            : distance < 200 ? "#E4572E"
-            : distance < 500 ? "#F2A541"
-            : distance < 1000 ? "#5DA9E9"
-            : "#1F4E8C";
-    };
+  const dartColour = (answer: boolean | null, distance: number) => {
+    return answer
+      ? "#1F4D36"
+      : distance < 100 ? "#E4572E"
+      : distance < 500 ? "#F2A541"
+      : distance < 900 ? "#5DA9E9"
+      : "#1F4E8C";
+  };
 
     const icon = (distance: number, answer: boolean | null) => {
-        const colour = dartColour(distance, answer);
+        const colour = dartColour(answer, distance);
 
         return L.divIcon({
             className: "custom-dart",
