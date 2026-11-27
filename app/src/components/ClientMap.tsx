@@ -2,7 +2,7 @@
 import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { guessType } from "@/server/lib/actions";
-import L from "leaflet";
+import L, { map } from "leaflet";
 
 const dartSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
   <ellipse cx="5" cy="59" rx="5" ry="2" fill="rgba(0,0,0,0.3)"/>
@@ -24,6 +24,8 @@ const abbreviation = (name: string | null) => {
 export default function ClientMap({ guesses } : { guesses : Array<guessType | []>}) {
     const defaultPosition : [number, number] = [46.858806, 3.185694]; // Center of France (Can see most of Western Europe with this)
     // starting position
+
+    const mapKey = process.env.NEXT_PUBLIC_MAP_API_KEY;
 
   const dartColour = (answer: boolean | null, distance: number) => {
     return answer
@@ -51,7 +53,7 @@ export default function ClientMap({ guesses } : { guesses : Array<guessType | []
             <MapContainer center={defaultPosition} zoom={4} className="relative z-0 h-full border-2 border-[#B59661]">
                 <TileLayer
                 attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
-                url='https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg'
+                url={`https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg?key=${mapKey}`}
                 minZoom={3}
                 maxZoom={10}
                 />
