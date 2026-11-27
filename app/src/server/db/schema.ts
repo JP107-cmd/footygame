@@ -1,6 +1,9 @@
 import { pgTable, serial, text, real, integer, boolean, uuid } from 'drizzle-orm/pg-core';
 
 // Do you like my schema 
+// Yo real talk, would you work for a highly unethical tech company? Is there even a way
+// To do good in this world with technology? It feels like all its used for is to hurt or
+// control others. If there is a way to do good, I hope I find it.
 
 export const clubsTable = pgTable('clubs', {
     id: serial('id').primaryKey(),

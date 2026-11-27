@@ -1,4 +1,5 @@
 import Game from "@/components/Game";
+import HowToPlay from "@/components/HowToPlay";
 import Loading from "@/components/Loading";
 import { Suspense } from "react";
 
@@ -9,6 +10,7 @@ export default async function Home() {
       <Suspense fallback={<Loading/>}>
         <Game/>
       </Suspense>
+      <HowToPlay/>
     </main>
   );
 }
